@@ -28,6 +28,10 @@ use std::{
 
 type Build = Rc<dyn Fn() -> AnyElement>;
 
+/// The most frames a second a repeating mark asks for. A window can show
+/// many at once, and a turning or pulsing mark reads as smooth at this rate.
+pub(crate) const MAX_FPS: f32 = 30.;
+
 /// One reserved slot: where it landed, the clip it landed under, and how to
 /// draw the mark there.
 struct Slot {
