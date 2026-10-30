@@ -555,7 +555,7 @@ mod tests {
     #![allow(clippy::expect_used)]
 
     use super::Marks;
-    use crate::sidebar::layout_tests::fixture_window;
+    use crate::sidebar::layout_tests::{fixture_window, run_frames};
     use gpui::{Bounds, ContentMask, EntityId, point, px, size};
     use std::time::Duration;
 
@@ -601,14 +601,7 @@ mod tests {
             (sidebar.read(cx).renders, layer.read(cx).renders)
         });
         assert!(cx.debug_bounds("status-orbit").is_some());
-        for _ in 0..4 {
-            cx.executor().advance_clock(Duration::from_millis(150));
-            cx.update(|window, cx| {
-                window.simulate_next_frame(cx);
-            });
-            cx.run_until_parked();
-            cx.update(|window, cx| window.draw(cx).clear(cx));
-        }
+        run_frames(cx, 4, Duration::from_millis(150));
         cx.update(|_, cx| {
             assert_eq!(sidebar.read(cx).renders, renders);
             assert!(layer.read(cx).renders >= layer_renders + 4);
